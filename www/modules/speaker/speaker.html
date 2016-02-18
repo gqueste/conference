@@ -1,0 +1,31 @@
+<ons-page ng-controller="DetailSpeakerController as ctrl">
+
+    <ons-toolbar>
+        <div class="left">
+            <ons-toolbar-button ng-click="app.menu.toggleMenu()"><ons-icon icon="fa-bars"></ons-icon></ons-toolbar-button>
+            <ons-back-button>Back</ons-back-button>
+        </div>
+        <div class="center">Présentateur</div>
+    </ons-toolbar>
+
+    <ul class="list">
+        <li class="list__item">
+            <span class="fa fa-user fa-lg"></span> Ajouter à mes contacts
+            <label class="switch switch--list-item">
+                <input ng-model="isInContacts" type="checkbox" class="switch__input" ng-change="toogleSpeakerInContacts()">
+                <div class="switch__toggle"></div>
+            </label>
+        </li>
+    </ul>
+
+    <div class="profile-card">
+        <img ng-src="data/images/{{speaker.image}}" class="profile-image">
+        <div class="profile-name">{{speaker.firstname}} {{speaker.lastname}}</div>
+        <div class="profile-id">@{{speaker.id}}</div>
+        <div class="profile-desc" ng-bind-html="getSpeakerAbout()"></div>
+        <div class="socialDiv">
+            <a ng-repeat="social in speaker.socials" ng-href="{{social.link}}"><ons-icon icon="fa fa-{{social.class}} fa-lg socialFont"></ons-icon></a>
+        </div>
+    </div>
+
+</ons-page>

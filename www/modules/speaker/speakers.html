@@ -1,0 +1,28 @@
+<ons-navigator var="app.speakers">
+<ons-page ng-controller="speakersController as ctrl">
+
+    <ons-toolbar>
+        <div class="left">
+            <ons-toolbar-button ng-click="app.menu.toggleMenu()"><ons-icon icon="fa-bars"></ons-icon></ons-toolbar-button>
+        </div>
+        <div class="center">Présentateurs</div>
+    </ons-toolbar>
+
+    <ons-list>
+        <ons-list-item ng-repeat="speaker in speakers" modifier="chevron" class="list-item-container" ng-click="goToSpeaker(speaker)">
+            <div class="list-item-left">
+                <img ng-src="data/images/{{speaker.image}}" class="avator">
+            </div>
+            <div class="list-item-right">
+                <div class="list-item-content">
+                    <div class="name"><strong>{{speaker.firstname}} {{speaker.lastname}}</strong>
+                        <span class="lucent">@{{speaker.id}}</span>
+                    </div>
+
+                    <span class="desc" ng-bind-html="getSpeakerAbout(speaker)"></span>
+                </div>
+            </div>
+        </ons-list-item>
+    </ons-list>
+</ons-page>
+</ons-navigator>
