@@ -29,14 +29,21 @@ angular.module('conf.shared', [])
                     resolve(data);
                 }
                 else {
-                    $http.get('./data/devfest-2015.json').
-                    success(function(result, status, headers, config) {
-                        data = result;
-                        resolve(data);
-                    }).
-                    error(function(result, status, headers, config) {
-                        reject(result);
-                    });
+                    var localData = window.localStorage['gdg'];
+                    if(localData == undefined){
+                        $http.get('./data/devfest-2015.json').
+                        success(function(result, status, headers, config) {
+                            data = result;
+                            window.localStorage['gdg'] = JSON.stringify(data);
+                            resolve(data);
+                        }).
+                        error(function(result, status, headers, config) {
+                            reject(result);
+                        });
+                    }
+                    else {
+                        data = JSON.parse(window.localStorage['gdg']);
+                    }
                 }
             });
         }
