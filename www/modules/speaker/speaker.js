@@ -3,7 +3,6 @@ angular.module('conf.speaker')
         $scope.speaker = app.speakers.getCurrentPage().options.speaker;
 
         var isSpeakerInContacts = function(){
-            var ret = false;
             var opts = {
                 filter : $scope.speaker.id,
                 multiple: true,
@@ -23,10 +22,16 @@ angular.module('conf.speaker')
         };
 
         $scope.getUrls = function(){
-            var ret = '';
+            var ret = [];
             $scope.speaker.socials.forEach(function(element){
-                ret += element.link;
+                ret.push(new ContactField('url', element.link));
             });
+            return ret;
+        };
+
+        $scope.getOrganizations = function(){
+            var ret = [];
+            ret.push(new ContactOrganization(false, 'home', $scope.speaker.company, '', ''));
             return ret;
         };
 
@@ -57,7 +62,7 @@ angular.module('conf.speaker')
                     note : $scope.speaker.about,
                     nickname :  $scope.speaker.id,
                     urls : $scope.getUrls(),
-                    organizations : $scope.speaker.company
+                    organizations : $scope.getOrganizations()
                 };
                 $cordovaContacts.save(contact).then(function(result) {
 
