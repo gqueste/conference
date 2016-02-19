@@ -12,10 +12,17 @@
             <strong>{{session.title}}</strong>
         </div>
         <div class="socialDiv">
+            <button class="button button--outline" ng-click="addPhotoFromLibrary()"><i class="fa fa-file-image-o fa-lg"></i></button>
+            <button class="button button--outline" ng-click="addPhotoFromCamera()"><i class="fa fa-camera fa-lg"></i></button>
+        </div>
+        <div class="socialDiv">
             <button class="button button--large" ng-click="enregistrerNote()">Enregistrer</button>
         </div>
         <div>
             <textarea class="textarea" style="width: 100%" placeholder="Textarea" ng-model="session.notes"></textarea>
+        </div>
+        <div ng-repeat="photo in session.photos">
+            <img ng-src="{{photo}}">
         </div>
     </div>
 </ons-page>
