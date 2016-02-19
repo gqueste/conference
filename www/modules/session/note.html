@@ -1,0 +1,21 @@
+<ons-page ng-controller="noteController as ctrl">
+    <ons-toolbar>
+        <div class="left">
+            <ons-toolbar-button ng-click="app.menu.toggleMenu()"><ons-icon icon="fa-bars"></ons-icon></ons-toolbar-button>
+            <ons-back-button>Back</ons-back-button>
+        </div>
+        <div class="center">Mes notes</div>
+    </ons-toolbar>
+
+    <div class="sessionContainer">
+        <div>
+            <strong>{{session.title}}</strong>
+        </div>
+        <div class="socialDiv">
+            <button class="button button--large" ng-click="enregistrerNote()">Enregistrer</button>
+        </div>
+        <div>
+            <textarea class="textarea" style="width: 100%" placeholder="Textarea" ng-model="session.notes"></textarea>
+        </div>
+    </div>
+</ons-page>
