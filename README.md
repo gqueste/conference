@@ -21,3 +21,6 @@ All basic functionnalities are working.
 * Session with a mark (in notes)
 * Favorites sessions
 * Schedule
+
+# Bug
+* Favorite session : If favorite or unfavor on the notes page and Back, the favorite icon stay how it was before (we should catch the event Back to handle that)
