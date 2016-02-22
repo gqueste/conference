@@ -20,3 +20,4 @@ All basic functionnalities are working.
 * Icon changed
 * Session with a mark (in notes)
 * Favorites sessions
+* Schedule
