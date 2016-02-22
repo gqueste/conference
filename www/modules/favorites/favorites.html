@@ -1,0 +1,15 @@
+<ons-navigator var="app.navi">
+    <ons-page ng-controller="favoritesController as ctrl">
+        <ons-toolbar>
+            <div class="left">
+                <ons-toolbar-button ng-click="app.menu.toggleMenu()"><ons-icon icon="fa-bars"></ons-icon></ons-toolbar-button>
+            </div>
+            <div class="center">Favoris</div>
+        </ons-toolbar>
+        <ons-list>
+            <div ng-repeat="session in sessions">
+                <ons-list-item  modifier="tapable chevron" ng-click="goToSessionDetails(session)">{{session.title}}</ons-list-item>
+            </div>
+        </ons-list>
+    </ons-page>
+</ons-navigator>

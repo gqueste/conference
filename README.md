@@ -15,3 +15,8 @@ Gabriel QUESTE
 
 # Functionalities
 All basic functionnalities are working.
+
+## Exam functionalities
+* Icon changed
+* Session with a mark (in notes)
+* Favorites sessions

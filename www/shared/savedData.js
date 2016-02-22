@@ -10,8 +10,24 @@ angular.module('conf.savedData', [])
             insertMedia : insertMedia,
             deleteMedia : deleteMedia,
             saveMark : saveMark,
-            getMark : getMark
+            getMark : getMark,
+            getFavorites : getFavorites,
+            addFavorite : addFavorite,
+            isInFavorites : isInFavorites,
+            removeFavorite : removeFavorite
         };
+
+        function createFavorites(){
+            return $q(function(resolve, reject){
+               openDB();
+               var query = "CREATE TABLE IF NOT EXISTS session_favorites (id text primary key)";
+               $cordovaSQLite.execute(db, query, []).then(function(res){
+                    resolve(res);
+               }, function(err){
+                    reject(err);
+               });
+            });
+        }
 
         function openDB(){
             if(db === undefined){
@@ -105,6 +121,60 @@ angular.module('conf.savedData', [])
                 openDB();
                 var query = "INSERT OR REPLACE INTO session_mark VALUES (?,?)";
                 $cordovaSQLite.execute(db, query, [session_id, mark]).then(function(res){
+                    resolve(res);
+                }, function(err){
+                    reject(err);
+                });
+            });
+        }
+
+        function getFavorites(){
+            return $q(function(resolve, reject){
+                createFavorites().then(function(){
+                    var selectQuery = "SELECT * from session_favorites";
+                    $cordovaSQLite.execute(db, selectQuery, []).then(function(res){
+                        resolve(res);
+                    }, function(err){
+                        reject(err);
+                    });
+                }, function(err){
+                    reject(err);
+                });
+            });
+        }
+
+        function addFavorite(session_id){
+            return $q(function(resolve, reject){
+                openDB();
+                var query = "INSERT OR REPLACE INTO session_favorites VALUES (?)";
+                $cordovaSQLite.execute(db, query, [session_id]).then(function(res){
+                    resolve(res);
+                }, function(err){
+                    reject(err);
+                });
+            });
+        }
+
+        function isInFavorites(session_id){
+            return $q(function(resolve, reject){
+                createFavorites().then(function(){
+                    var selectQuery = "SELECT * from session_favorites where id = ?";
+                    $cordovaSQLite.execute(db, selectQuery, [session_id]).then(function(res){
+                        resolve(res);
+                    }, function(err){
+                        reject(err);
+                    });
+                }, function(err){
+                    reject(err);
+                });
+            });
+        }
+
+        function removeFavorite(session_id){
+            return $q(function(resolve, reject){
+                openDB();
+                var query = "DELETE from session_favorites where  id = ?";
+                $cordovaSQLite.execute(db, query, [session_id]).then(function(res){
                     resolve(res);
                 }, function(err){
                     reject(err);
