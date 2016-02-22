@@ -1,5 +1,5 @@
 <ons-navigator var="app.navi">
-    <ons-page ng-controller="techController as ctrl">
+    <ons-page ng-controller="aboutController as ctrl">
 
         <ons-toolbar>
             <div class="left">
@@ -8,7 +8,24 @@
             <div class="center">A propos</div>
         </ons-toolbar>
 
-        <h1>Page A propos</h1>
+        <div class="sessionContainer">
+            <div>
+                <h2>Description</h2>
+                <div ng-bind-html="description"></div>
+            </div>
+            <div>
+                <h2>Version</h2>
+                <div ng-bind-html="version"></div>
+            </div>
+            <div>
+                <h2>Auteur</h2>
+                <div ng-bind-html="auteur"></div>
+            </div>
+            <div>
+                <h2>Liens</h2>
+                <button class="button button--outline" ng-click="goToGithub()"><i class="fa fa-github fa-lg"></i> Github</button>
+            </div>
+        </div>
 
     </ons-page>
 </ons-navigator>
