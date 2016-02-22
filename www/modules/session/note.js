@@ -1,6 +1,6 @@
 angular.module('conf.session')
-    .controller('noteController', ['$scope', '$sce', '$cordovaSQLite', '$cordovaCamera', '$cordovaCapture', '$cordovaActionSheet',
-        function($scope, $sce, $cordovaSQLite, $cordovaCamera, $cordovaCapture, $cordovaActionSheet){
+    .controller('noteController', ['$scope', '$sce', '$cordovaSQLite', '$cordovaCamera', '$cordovaCapture', '$cordovaActionSheet', '$cordovaSocialSharing',
+        function($scope, $sce, $cordovaSQLite, $cordovaCamera, $cordovaCapture, $cordovaActionSheet, $cordovaSocialSharing){
 
         $scope.session = app.navi.getCurrentPage().options.session;
         $scope.session.photos = [];
@@ -14,6 +14,7 @@ angular.module('conf.session')
             $cordovaSQLite.execute(db, query, []).then(function(res){
                 var selectQuery = "SELECT * from session_photos where id=?";
                 $cordovaSQLite.execute(db, selectQuery, [$scope.session.id]).then(function(res){
+                    $scope.session.photos = [];
                     for(var i = 0; i < res.rows.length; i++){
                         $scope.session.photos.push(res.rows.item(i).url);
                     }
@@ -174,8 +175,19 @@ angular.module('conf.session')
             });
         };
 
+        var sharePhoto = function(photo){
+            $cordovaSocialSharing
+                .share($scope.session.notes, $scope.session.title, photo,null)
+                .then(function(result) {
+                    // Success!
+                }, function(err) {
+                    // An error occured. Show a message to the user
+                });
+        };
+
         $scope.openActionSheet = function(photo){
             var options = {
+                androidTheme: window.plugins.actionsheet.ANDROID_THEMES.THEME_DEVICE_DEFAULT_LIGHT,
                 title: "Que faire avec l'image ?",
                 buttonLabels: ['Supprimer', 'Partager'],
                 addCancelButtonWithLabel: 'Annuler',
