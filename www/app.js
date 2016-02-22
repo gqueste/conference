@@ -3,6 +3,7 @@ var app = ons.bootstrap('conferenceApp', [
     'conf.shared',
     'conf.savedData',
     'conf.favorites',
+    'conf.schedule',
     'conf.home',
     'conf.session',
     'conf.speaker',

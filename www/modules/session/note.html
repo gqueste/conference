@@ -12,11 +12,9 @@
             <strong>{{session.title}}</strong>
         </div>
         <div>
-            <i class="fa fa-{{getStarClass(1)}} fa-lg" ng-click="setMark(1)"></i>
-            <i class="fa fa-{{getStarClass(2)}} fa-lg" ng-click="setMark(2)"></i>
-            <i class="fa fa-{{getStarClass(3)}} fa-lg" ng-click="setMark(3)"></i>
-            <i class="fa fa-{{getStarClass(4)}} fa-lg" ng-click="setMark(4)"></i>
-            <i class="fa fa-{{getStarClass(5)}} fa-lg" ng-click="setMark(5)"></i>
+            <span ng-repeat="mark in [1,2,3,4,5]">
+                <i class="fa fa-{{getStarClass(mark)}} fa-lg" ng-click="setMark(mark)"></i>
+            </span>
         </div>
         <div class="socialDiv">
             <button class="button button--outline" ng-click="addPhotoFromLibrary()"><i class="fa fa-file-image-o fa-lg"></i></button>

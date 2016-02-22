@@ -13,6 +13,7 @@ angular.module('conf.shared', [])
         this.goToTechniques = function() { changePage('modules/technique/techniques.html');}
         this.goToAbout = function() { changePage('modules/about/about.html');}
         this.goToFavorites = function() { changePage('modules/favorites/favorites.html');}
+        this.goToSchedule = function() { changePage('modules/schedule/schedule.html');}
 
     })
 
