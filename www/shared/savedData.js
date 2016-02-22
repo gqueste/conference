@@ -8,7 +8,9 @@ angular.module('conf.savedData', [])
             loadNotes : loadNotes,
             insertNote : insertNote,
             insertMedia : insertMedia,
-            deleteMedia : deleteMedia
+            deleteMedia : deleteMedia,
+            saveMark : saveMark,
+            getMark : getMark
         };
 
         function openDB(){
@@ -74,6 +76,35 @@ angular.module('conf.savedData', [])
                 openDB();
                 var query = "DELETE from session_media where  id = ? and url = ?";
                 $cordovaSQLite.execute(db, query, [session_id, photo]).then(function(res){
+                    resolve(res);
+                }, function(err){
+                    reject(err);
+                });
+            });
+        }
+
+        function getMark(session_id){
+            return $q(function(resolve, reject){
+                openDB();
+                var query = "CREATE TABLE IF NOT EXISTS session_mark (id text primary key, mark text)";
+                $cordovaSQLite.execute(db, query, []).then(function(res){
+                    var selectQuery = "SELECT * from session_mark where id=?";
+                    $cordovaSQLite.execute(db, selectQuery, [session_id]).then(function(res){
+                        resolve(res);
+                    }, function(err){
+                        reject(err);
+                    });
+                }, function(err){
+                    reject(err);
+                });
+            });
+        }
+
+        function saveMark(session_id, mark){
+            return $q(function(resolve, reject){
+                openDB();
+                var query = "INSERT OR REPLACE INTO session_mark VALUES (?,?)";
+                $cordovaSQLite.execute(db, query, [session_id, mark]).then(function(res){
                     resolve(res);
                 }, function(err){
                     reject(err);

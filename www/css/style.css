@@ -127,3 +127,8 @@
 .sessionContainer {
     padding: 10px 10px 10px 10px;
 }
+
+.markDiv{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}

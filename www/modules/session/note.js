@@ -2,6 +2,7 @@ angular.module('conf.session')
     .controller('noteController', function($scope, $sce, $cordovaCamera, $cordovaCapture, $cordovaActionSheet, $cordovaSocialSharing, savedDataService){
 
         $scope.session = app.navi.getCurrentPage().options.session;
+        $scope.session.mark = 0;
         $scope.session.photos = [];
         $scope.session.audios = [];
         $scope.session.videos = [];
@@ -41,7 +42,21 @@ angular.module('conf.session')
             });
         };
 
+        var loadMark = function(){
+            savedDataService.getMark($scope.session.id).then(function(res){
+                if(res.rows.length > 0){
+                    $scope.session.mark = res.rows.item(0).mark;
+                }
+                else {
+                    $scope.session.mark = 0;
+                }
+            }, function(err){
+                console.log(err);
+            })
+        };
+
         loadNote();
+        loadMark();
         loadMedia();
 
         var insertNote = function(id, notes){
@@ -157,6 +172,23 @@ angular.module('conf.session')
                         break;
                 }
             });
-        }
+        };
+
+        $scope.getStarClass = function(index){
+            if($scope.session.mark >= index){
+                return "star";
+            }
+            else{
+                return "star-o";
+            }
+        };
+
+        $scope.setMark = function(mark){
+            savedDataService.saveMark($scope.session.id, mark).then(function(){
+                $scope.session.mark = mark;
+            }, function(err){
+                console.log(err);
+            })
+        };
 
     });
