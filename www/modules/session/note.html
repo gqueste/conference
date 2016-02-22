@@ -23,8 +23,8 @@
         <div>
             <textarea class="textarea" style="width: 100%" placeholder="Textarea" ng-model="session.notes"></textarea>
         </div>
-        <div ng-repeat="photo in session.photos">
-            <img ng-src="{{photo}}">
+        <div ng-repeat="photo in session.photos track by $index">
+            <img ng-src="{{photo}}" ng-click="openActionSheet(photo)">
         </div>
         <div ng-repeat="audio in session.audios">
             <audio controls src="{{audio}}"></audio>

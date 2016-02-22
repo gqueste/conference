@@ -1,5 +1,7 @@
 angular.module('conf.session')
-    .controller('noteController', ['$scope', '$sce', '$cordovaSQLite', '$cordovaCamera', '$cordovaCapture', '$cordovaMedia', function($scope, $sce, $cordovaSQLite, $cordovaCamera, $cordovaCapture, $cordovaMedia){
+    .controller('noteController', ['$scope', '$sce', '$cordovaSQLite', '$cordovaCamera', '$cordovaCapture', '$cordovaActionSheet',
+        function($scope, $sce, $cordovaSQLite, $cordovaCamera, $cordovaCapture, $cordovaActionSheet){
+
         $scope.session = app.navi.getCurrentPage().options.session;
         $scope.session.photos = [];
         $scope.session.audios = [];
@@ -8,7 +10,7 @@ angular.module('conf.session')
         var db = $cordovaSQLite.openDB({ name: "conference.db" });
 
         var loadPhotos = function(){
-            var query = "CREATE TABLE IF NOT EXISTS session_photos (id text, url text)";
+            var query = "CREATE TABLE IF NOT EXISTS session_photos (id text, url text primary key)";
             $cordovaSQLite.execute(db, query, []).then(function(res){
                 var selectQuery = "SELECT * from session_photos where id=?";
                 $cordovaSQLite.execute(db, selectQuery, [$scope.session.id]).then(function(res){
@@ -24,7 +26,7 @@ angular.module('conf.session')
         };
 
         var loadMedia = function(){
-            var query = "CREATE TABLE IF NOT EXISTS session_media (id text, url text, type text)";
+            var query = "CREATE TABLE IF NOT EXISTS session_media (id text, url text primary key, type text)";
             $cordovaSQLite.execute(db, query, []).then(function(res){
                 var selectQuery = "SELECT * from session_media where id=?";
                 $cordovaSQLite.execute(db, selectQuery, [$scope.session.id]).then(function(res){
@@ -162,5 +164,34 @@ angular.module('conf.session')
                 // An error occurred. Show a message to the user
             });
         };
+
+        var removePhoto = function(photo){
+            var query = "DELETE from session_photos where  id = ? and url = ?";
+            $cordovaSQLite.execute(db, query, [$scope.session.id, photo]).then(function(res){
+                $scope.session.photos.splice($scope.session.photos.indexOf(photo), 1);
+            }, function(err){
+                console.error(err);
+            });
+        };
+
+        $scope.openActionSheet = function(photo){
+            var options = {
+                title: "Que faire avec l'image ?",
+                buttonLabels: ['Supprimer', 'Partager'],
+                addCancelButtonWithLabel: 'Annuler',
+                androidEnableCancelButton : true,
+                winphoneEnableCancelButton : true
+            };
+            $cordovaActionSheet.show(options).then(function(btnIndex){
+                switch(btnIndex){
+                    case 1:
+                        removePhoto(photo);
+                        break;
+                    case 2:
+                        sharePhoto(photo);
+                        break;
+                }
+            });
+        }
 
     }]);
