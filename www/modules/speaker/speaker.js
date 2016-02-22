@@ -1,5 +1,5 @@
 angular.module('conf.speaker')
-    .controller('DetailSpeakerController', ['$scope', '$filter', '$sce', '$cordovaContacts', function($scope, $filter, $sce, $cordovaContacts){
+    .controller('DetailSpeakerController', function($scope, $filter, $sce, $cordovaContacts, $cordovaInAppBrowser){
         $scope.speaker = app.speakers.getCurrentPage().options.speaker;
 
         var isSpeakerInContacts = function(){
@@ -71,4 +71,20 @@ angular.module('conf.speaker')
                 });
             }
         };
-    }]);
+
+        $scope.openSite = function(link){
+            var options = {
+                location: 'no',
+                clearcache: 'no',
+                toolbar: 'no'
+            };
+
+            $cordovaInAppBrowser.open(link, '_blank', options)
+                .then(function(event) {
+                    // success
+                })
+                .catch(function(event) {
+                    // error
+                });
+        };
+    });

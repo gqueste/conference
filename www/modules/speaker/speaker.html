@@ -24,7 +24,7 @@
         <div class="profile-id">@{{speaker.id}}</div>
         <div class="profile-desc" ng-bind-html="getSpeakerAbout()"></div>
         <div class="socialDiv">
-            <a ng-repeat="social in speaker.socials" ng-href="{{social.link}}"><ons-icon icon="fa fa-{{social.class}} fa-lg socialFont"></ons-icon></a>
+            <ons-icon ng-repeat="social in speaker.socials" ng-click="openSite(social.link)" icon="fa fa-{{social.class}} fa-lg socialFont"></ons-icon>
         </div>
     </div>
 
