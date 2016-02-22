@@ -1,111 +1,65 @@
 angular.module('conf.session')
-    .controller('noteController', ['$scope', '$sce', '$cordovaSQLite', '$cordovaCamera', '$cordovaCapture', '$cordovaActionSheet', '$cordovaSocialSharing',
-        function($scope, $sce, $cordovaSQLite, $cordovaCamera, $cordovaCapture, $cordovaActionSheet, $cordovaSocialSharing){
+    .controller('noteController', function($scope, $sce, $cordovaCamera, $cordovaCapture, $cordovaActionSheet, $cordovaSocialSharing, savedDataService){
 
         $scope.session = app.navi.getCurrentPage().options.session;
         $scope.session.photos = [];
         $scope.session.audios = [];
         $scope.session.videos = [];
 
-        var db = $cordovaSQLite.openDB({ name: "conference.db" });
-
-        var loadPhotos = function(){
-            var query = "CREATE TABLE IF NOT EXISTS session_photos (id text, url text primary key)";
-            $cordovaSQLite.execute(db, query, []).then(function(res){
-                var selectQuery = "SELECT * from session_photos where id=?";
-                $cordovaSQLite.execute(db, selectQuery, [$scope.session.id]).then(function(res){
-                    $scope.session.photos = [];
-                    for(var i = 0; i < res.rows.length; i++){
-                        $scope.session.photos.push(res.rows.item(i).url);
-                    }
-                }, function(err){
-                    console.error(err);
-                });
-            }, function(err){
-                console.error(err);
-            });
-        };
-
         var loadMedia = function(){
-            var query = "CREATE TABLE IF NOT EXISTS session_media (id text, url text primary key, type text)";
-            $cordovaSQLite.execute(db, query, []).then(function(res){
-                var selectQuery = "SELECT * from session_media where id=?";
-                $cordovaSQLite.execute(db, selectQuery, [$scope.session.id]).then(function(res){
-                    for(var i = 0; i < res.rows.length; i++){
-                        var item = res.rows.item(i);
-                        if(item.type == 'audio'){
-                            $scope.session.audios.push(item.url);
-                        }
-                        else{
-                            $scope.session.videos.push(item.url);
-                        }
+            savedDataService.loadMedia($scope.session.id).then(function(res){
+                $scope.session.photos = [];
+                $scope.session.audios = [];
+                $scope.session.videos = [];
+                for(var i = 0; i < res.rows.length; i++){
+                    var item = res.rows.item(i);
+                    if(item.type == 'audio'){
+                        $scope.session.audios.push(item.url);
                     }
-                }, function(err){
-                    console.error(err);
-                });
+                    if(item.type == 'photo'){
+                        $scope.session.photos.push(item.url);
+                    }
+                    if(item.type == 'video'){
+                        $scope.session.videos.push(item.url);
+                    }
+                }
             }, function(err){
                 console.error(err);
             });
         };
 
         var loadNote = function() {
-            var query = "CREATE TABLE IF NOT EXISTS session_notes (id text primary key, notes text)";
-            $cordovaSQLite.execute(db, query, []).then(function(res){
-                var selectQuery = "SELECT * from session_notes where id=?";
-                $cordovaSQLite.execute(db, selectQuery, [$scope.session.id]).then(function(res){
-                    if(res.rows.length > 0){
-                        $scope.session.notes = res.rows.item(0).notes;
-                    }
-                    else {
-                        $scope.session.notes = "Mes notes";
-                    }
-                    loadPhotos();
-                }, function(err){
-                    console.error(err);
-                });
+            savedDataService.loadNotes($scope.session.id).then(function(res){
+                if(res.rows.length > 0){
+                    $scope.session.notes = res.rows.item(0).notes;
+                }
+                else {
+                    $scope.session.notes = "Mes notes";
+                }
             }, function(err){
                 console.error(err);
             });
         };
 
         loadNote();
-        loadPhotos();
         loadMedia();
 
         var insertNote = function(id, notes){
-            var query = "INSERT OR REPLACE INTO session_notes VALUES (?,?)";
-            $cordovaSQLite.execute(db, query, [id, notes]).then(function(res){
-            }, function(err){
-                console.error(err);
-            });
+            savedDataService.insertNote(id, notes);
         };
 
         $scope.enregistrerNote = function(){
             insertNote($scope.session.id, $scope.session.notes);
         };
 
-        var savePhoto = function(photo){
-            var query = "INSERT OR REPLACE INTO session_photos VALUES (?,?)";
-            $cordovaSQLite.execute(db, query, [$scope.session.id, photo]).then(function(res){
-
-            }, function(err){
-                console.error(err);
-            });
-        };
-
         var saveMedia = function(url, type){
-            var query = "INSERT OR REPLACE INTO session_media VALUES (?,?,?)";
-            $cordovaSQLite.execute(db, query, [$scope.session.id, url, type]).then(function(res){
-
-            }, function(err){
-                console.error(err);
-            });
+            savedDataService.insertMedia($scope.session.id, url, type);
         };
 
         var enregistrerImage = function(options){
             $cordovaCamera.getPicture(options).then(function(imageURI) {
                 $scope.session.photos.push(imageURI);
-                savePhoto(imageURI);
+                saveMedia(imageURI, 'photo');
             }, function(err) {
                 // error
             });
@@ -167,11 +121,10 @@ angular.module('conf.session')
         };
 
         var removePhoto = function(photo){
-            var query = "DELETE from session_photos where  id = ? and url = ?";
-            $cordovaSQLite.execute(db, query, [$scope.session.id, photo]).then(function(res){
+            savedDataService.deleteMedia($scope.session.id, photo).then(function(){
                 $scope.session.photos.splice($scope.session.photos.indexOf(photo), 1);
             }, function(err){
-                console.error(err);
+                console.log(err);
             });
         };
 
@@ -206,4 +159,4 @@ angular.module('conf.session')
             });
         }
 
-    }]);
+    });
