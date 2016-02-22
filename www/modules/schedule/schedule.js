@@ -15,10 +15,6 @@ angular.module('conf.schedule',[])
             app.navi.pushPage('modules/session/session.html', object);
         };
 
-        $scope.getHour = function(hour){
-            return hour.hourStart + ":" + hour.minStart;
-        };
-
         $scope.getDuration = function(hour){
             var start = parseInt(hour.hourStart) * 60 + parseInt(hour.minStart);
             var end = parseInt(hour.hourEnd) * 60 + parseInt(hour.minEnd);
